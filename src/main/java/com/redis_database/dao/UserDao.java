@@ -1,6 +1,7 @@
 package com.redis_database.dao;
 
 import com.redis_database.entity.User;
+import com.redis_database.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
@@ -33,8 +34,9 @@ public class UserDao {
 
     // delete
     public void deleteUser(String userId){
-          template.opsForHash().delete(KEY,userId);
-
+        Long deletedCount = template.opsForHash().delete(KEY, userId);
+        if (deletedCount == 0) {
+            throw new UserNotFoundException("User with ID " + userId + " not found for deletion.");
+        }
     }
-
-}
+    }

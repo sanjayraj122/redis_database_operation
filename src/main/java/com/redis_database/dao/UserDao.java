@@ -22,14 +22,17 @@ public class UserDao {
     }
 
     public User getUserById(String userId){
-        return (User) template.opsForHash().get(KEY,userId);
+       Object user =template.opsForHash().get(KEY,userId);
+       if (user==null){
+           throw new UserNotFoundException("User with ID " + userId + " not found.");
+
+       }
+       return (User) user;
+
     }
 
     public Map<Object,Object> findAll(){
-
         return template.opsForHash().entries(KEY);
-
-
     }
 
     // delete
